@@ -16,7 +16,7 @@ def search(request):
 def simple_output(request):
         if request:
                 q= request.POST['q']
-                conn= pyodbc.connect('DRIVER={NetezzaSQL};SERVER=netezza;DATABASE=STATS_GROUP_SANDBOX;UID=omusayev;PWD=yellow0444')
+                conn= pyodbc.connect('DRIVER={NetezzaSQL};SERVER=netezza;DATABASE=STATS_GROUP_SANDBOX;UID=omusayev;PWD=yellow0444;Trusted_Connection=yes')
                 cur=conn.cursor()
 
                 query= "select b.ONSALE_DATE as onsale_date, b.rhsubject_desc as SUBJECT, b.subject_grp1 as CATEGORY, sum(a.qty_sld_amz) as PRE_SALES, \
