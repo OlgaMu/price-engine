@@ -1,0 +1,9 @@
+Python>=2.6 or higher
+Django==1.4.6
+sklearn
+numpy
+pickle
+datetime
+py2neo
+
+
