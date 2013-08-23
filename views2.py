@@ -11,7 +11,7 @@ def output(request):
 		if existing:
 			rec= existing.recommendation
 			last_update= existing.today
-			return render(request, 'previously_calculated.html', {"rec": rec, "last_update": last_update}
+			return render(request, 'results.html', {'queried_before'=True, 
 		else:
 			model_inputs=NetezzaData.read_netezza(isbn_input)
 		
@@ -31,7 +31,7 @@ def output(request):
 			
 				GraphData.save(ISBN=isbn_input, Price= self.price, Neighbor_price= neighbor_price, recommendation=copurchase_info_recommends)
 				
-				return render("new_calculation.html', {'neo4j_recommends'= copurchase_data_recommends, "netezza_recommends'= model_recommends} 
+				return render("results.html', {'neo4j_recommends'= copurchase_data_recommends, "netezza_recommends'= model_recommends} 
 			
 			else:
 				return render("I'm sorry. I can't seem to find that. Could you try again.")
