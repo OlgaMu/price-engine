@@ -13,7 +13,7 @@ def output(request):
 		
 		if existing:
 			model_recommends= existing.recommendation
-			last_update= existing.today
+			last_update= existing.day_of_update
 			try:
 				existing_also=GraphData.objects.get(ISBN=isbn_input).recommendation
 				consumer_data_recommends= existing_also.recommendation
