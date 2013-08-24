@@ -20,7 +20,7 @@ def output(request):
 			except:
 				consumer_data_recommends= "No recommendation."
 			
-			return render(request, 'results.html', {'queried_before'=True, 'neo4j_recommends'=consumer_data_recommends,'netezza_recommends'=model_recommends}
+			return render(request, 'results.html', {'query_date'=last_update 'neo4j_recommends'=consumer_data_recommends,'netezza_recommends'=model_recommends}
 		else:
 			model_inputs=NetezzaData.read_netezza(isbn_input)
 		
@@ -40,7 +40,7 @@ def output(request):
 			
 				GraphData.save(ISBN=isbn_input, Price= model_inputs[4], Neighbor_price= neighbor_price, recommendation=copurchase_info_recommends)
 				
-				return render(request, 'results.html', {'queried_before'=False, 'neo4j_recommends'= consumer_data_recommends, 'netezza_recommends'= model_recommends} 
+				return render(request, 'results.html', {'queried_date'=today, 'neo4j_recommends'= consumer_data_recommends, 'netezza_recommends'= model_recommends} 
 			
 			else:
 				return HttpResponse("I'm sorry. I can't seem to find that. Could you try again?")
