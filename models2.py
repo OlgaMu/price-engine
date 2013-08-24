@@ -10,8 +10,6 @@ except ImportError:
 	import pickle
 import numpy as np
 	
-class DataManager(models.Manager):
-	
 
 class Book(models.Model)
 	ISBN=IntegerProperty(unique_index=True)
@@ -43,7 +41,7 @@ class NetezzaData(Book):
 		group by b.MATERIAL, b.rhsubject_desc, b.subject_grp1, b.ONSALE_DATE"
 					
 		
-		params={'isbn': self.ISBN, 'date2': today, 'date1': two_weeks_ago}
+		params={'isbn': isbn, 'date2': today, 'date1': two_weeks_ago}
 		cur.execute(query, params=params)
 		model_inputs= cur.fetchone()
 		conn.close()
@@ -57,7 +55,7 @@ class NetezzaData(Book):
 		elast_model = pickle.load("ELASTICITYmodel.pkl")
 		forecast = elast_model.predict(inputs)
 		
-		return forecast
+		return prediction
 	
 	elasticity= property(make_recommendation)
 	def make_recommendation(self, elasticity):
@@ -68,7 +66,7 @@ class NetezzaData(Book):
 		else:
 			return "Something just went horribly wrong."
 		
-	recommendation= property(make_recommendation)
+	model_recommends= property(make_recommendation)
 	
 	
 	
@@ -76,22 +74,20 @@ class NetezzaData(Book):
 class GraphData(Book):
 	graphDB= neo4j.GraphDatabaseService("http://nycold:7474/db/data/")
 	
-	def Price_fetch(self, ISBN):
-		query= "START n=node:ni(ISBN="{ISBN}") return n.Price"
+	def Price_fetch(self, isbn):
+		query= "START n=node:ni(ISBN="{isbn}") return n.Price"
 		data, metadata =cypher.execute(graphDB, query)
 	Price= property(Price_fetch)
 
 	def Neighbor_price_fetch(self, ISBN):
-		query= "START n=node:ni(ISBN={ISBN}) MATCH n-[r]-m WHERE has(m.Type) and has(m.Price) and m.Type="Title" with n, r ORDER BY r.weight DESC LIMIT 15 RETURN avg(m.Price)"
+		query= "START n=node:ni(ISBN={ISBN}) MATCH n-[r]-m WHERE has(m.Type) and has(m.Price) and m.Type='Title' with n, r ORDER BY r.weight DESC LIMIT 15 RETURN avg(m.Price)"
 		data = cypher.execute(graphDB, query)
 		if isinstance(data[0][0], list):
 			return data[0][0][0]
 		else:
 			return data[0][0]
 	Neighbor_price= property(Neighbor_price_fetch)
-	
-	@Price_fetch
-	@Neighbor_price_fetch
+
 	def make_recommendation(self, self_price, neighbor_price):
 		
 		dif= self.Neighbor_price - self.Price
@@ -104,4 +100,4 @@ class GraphData(Book):
 		else:
 			return "Priced about right."
 			
-	recommendation= property(decide)
+	consumer_data_recommends= property(decide)
