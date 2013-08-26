@@ -35,7 +35,6 @@ class NetezzaData(Book):
 		on b.prod_key=a.prod_key
 		where
 		b.format='EL'
-		and b.PUB_HOUSE_DESC='Random House'
 		and a.Date between '{date1}' and '{date2}'
 		and b.material='{isbn}'
 		group by b.MATERIAL, b.rhsubject_desc, b.subject_grp1, b.ONSALE_DATE"
